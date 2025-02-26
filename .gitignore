@@ -5,3 +5,4 @@ large_files/*
 nlp_class2/chunking/*
 **/.ipynb_checkpoints/
 **/.vscode/
+*.zip
