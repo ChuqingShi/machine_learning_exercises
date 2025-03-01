@@ -20,16 +20,16 @@ class BanditArm:
   def __init__(self, p):
     # p: the win rate
     self.p = p
-    self.p_estimate = # TODO
-    self.N = # TODO
+    self.p_estimate = 0
+    self.N = 0
 
   def pull(self):
     # draw a 1 with probability p
     return np.random.random() < self.p
 
   def update(self, x):
-    self.N = # TODO
-    self.p_estimate = # TODO
+    self.N = self.N + 1
+    self.p_estimate = self.p_estimate + (x - self.p_estimate) / self.N
 
 
 def experiment():
@@ -41,16 +41,19 @@ def experiment():
   num_optimal = 0
   optimal_j = np.argmax([b.p for b in bandits])
   print("optimal j:", optimal_j)
+  num_times_exploited_not_optimal = 0
 
   for i in range(NUM_TRIALS):
 
     # use epsilon-greedy to select the next bandit
     if np.random.random() < EPS:
       num_times_explored += 1
-      j = # TODO
+      j = np.random.choice(3)
     else:
       num_times_exploited += 1
-      j = # TODO
+      j = np.argmax([b.p_estimate for b in bandits])
+      if j != optimal_j:
+        num_times_exploited_not_optimal += 1
 
     if j == optimal_j:
       num_optimal += 1
@@ -75,7 +78,9 @@ def experiment():
   print("overall win rate:", rewards.sum() / NUM_TRIALS)
   print("num_times_explored:", num_times_explored)
   print("num_times_exploited:", num_times_exploited)
+  print("num_times_exploited_not_optimal:", num_times_exploited_not_optimal)
   print("num times selected optimal bandit:", num_optimal)
+
 
   # plot the results
   cumulative_rewards = np.cumsum(rewards)
