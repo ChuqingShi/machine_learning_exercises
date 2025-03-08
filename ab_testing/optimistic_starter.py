@@ -20,16 +20,16 @@ class Bandit:
   def __init__(self, p):
     # p: the win rate
     self.p = p
-    self.p_estimate = # TODO
-    self.N = # TODO
+    self.p_estimate = 5. # TODO
+    self.N = 1 # TODO
 
   def pull(self):
     # draw a 1 with probability p
     return np.random.random() < self.p
 
   def update(self, x):
-    # TODO
-    self.p_estimate = # TODO
+    self.N = self.N + 1 # TODO
+    self.p_estimate =  self.p_estimate + (x - self.p_estimate) / self.N # TODO
 
 
 def experiment():
@@ -38,7 +38,7 @@ def experiment():
   rewards = np.zeros(NUM_TRIALS)
   for i in range(NUM_TRIALS):
     # use optimistic initial values to select the next bandit
-    j = # TODO
+    j = np.argmax([b.p_estimate for b in bandits]) # TODO
 
     # pull the arm for the bandit with the largest sample
     x = bandits[j].pull()
@@ -57,7 +57,7 @@ def experiment():
   # print total reward
   print("total reward earned:", rewards.sum())
   print("overall win rate:", rewards.sum() / NUM_TRIALS)
-  print("num times selected each bandit:", [b.N for b in bandits])
+  print("num times selected each bandit:", [b.N-1 for b in bandits])
 
   # plot the results
   cumulative_rewards = np.cumsum(rewards)
